@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fazedor de Orçamentos - Tomasi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Bibliotecas externas -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="images/logo.jpg" alt="Logo Tomasi" class="logo">
+            <h1>FAZEDOR DE ORÇAMENTOS</h1>
+            <p class="subtitle">(Atualizado com observações padrão e estoque em LaTeX)</p>
+        </header>
+
+        <!-- Seção de busca do cliente -->
+        <section id="busca-cliente" class="card">
+            <h2>🔍 Busca de Cliente</h2>
+            <div class="form-group">
+                <label for="codigo-cliente">Código do Orçamento:</label>
+                <input type="text" id="codigo-cliente" placeholder="Digite o código">
+                <button id="buscar-cliente-btn" class="btn-primary">Buscar Cliente</button>
+            </div>
+            <div class="cliente-info">
+                <div class="form-group">
+                    <label for="cliente">Cliente:</label>
+                    <input type="text" id="cliente" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cidade">Cidade:</label>
+                    <input type="text" id="cidade" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="uf">UF:</label>
+                    <input type="text" id="uf" readonly>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de seleção do produto -->
+        <section id="selecao-produto" class="card">
+            <h2>🛒 Seleção do Produto</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" id="quantidade" min="1" max="100" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoria:</label>
+                    <select id="categoria"></select>
+                </div>
+                <div class="form-group">
+                    <label for="subcategoria">Subcategoria:</label>
+                    <select id="subcategoria"></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="linha">Linha:</label>
+                    <select id="linha"></select>
+                </div>
+                <div class="form-group">
+                    <label for="espetos">Espetos:</label>
+                    <input type="number" id="espetos" min="0" max="100" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="galerias">Galerias:</label>
+                    <input type="number" id="galerias" min="0" max="100" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado">
+                        <option value="RS">RS</option>
+                        <option value="SC">SC</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button id="adicionar-btn" class="btn-success">Adicionar ao Carrinho</button>
+                <button id="finalizar-btn" class="btn-info">Finalizar</button>
+            </div>
+            
+            <!-- Visualização do produto -->
+            <div id="visualizacao-produto" class="produto-visual">
+                <div id="grafico-comprimento"></div>
+                <div id="info-produto"></div>
+            </div>
+        </section>
+
+        <!-- Carrinho -->
+        <section id="carrinho" class="card hidden">
+            <h2>📋 Carrinho</h2>
+            <div id="itens-carrinho"></div>
+            <div class="form-group">
+                <label for="multiplicador">Multiplicador:</label>
+                <input type="number" id="multiplicador" min="0" max="10" step="0.01" value="1.0">
+            </div>
+            <div id="resumo-carrinho"></div>
+            
+            <!-- Observações -->
+            <div class="form-group">
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" rows="8"></textarea>
+            </div>
+            
+            <div class="buttons">
+                <button id="gerar-latex-btn" class="btn-success">Gerar LaTeX</button>
+                <button id="voltar-btn" class="btn-warning">Voltar</button>
+            </div>
+            
+            <!-- Saída LaTeX -->
+            <div class="form-group">
+                <label for="codigo-latex">Código LaTeX:</label>
+                <textarea id="codigo-latex" rows="15" readonly></textarea>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/google-sheets.js"></script>
+    <script src="js/latex-generator.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
