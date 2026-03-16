@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Juros Compostos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .radio-option.selected {
+                background: #667eea;
+                color: white;
+                border-color: #5a67d8;
+            }
+
+            .radio-option input[type="radio"] {
+                display: none;
+            }
+
+            .radio-option label {
+                margin: 0;
+                cursor: pointer;
+                color: inherit;
+                text-transform: none;
+                font-weight: 500;
+            }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            }
+
+            button:active {
+                transform: translateY(0);
+            }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+            .resultado h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 20px;
+            }
+
+        .valor-principal {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .detalhes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detalhe-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+            .detalhe-item .label {
+                color: #666;
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .detalhe-item .value {
+                color: #333;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+        .total-juros {
+            color: #dc3545;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .detalhes {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Simulador de Juros Compostos</h1>
+
+        <div class="input-group">
+            <label for="principal">Valor Principal (R$)</label>
+            <input type="number" id="principal" value="1000" min="0" step="0.01">
+        </div>
+
+        <div class="input-group">
+            <label for="taxa">Taxa de Juros (% ao mês)</label>
+            <input type="number" id="taxa" value="1" min="0" step="0.1">
+        </div>
+
+        <div class="input-group">
+            <label for="periodo">Período (meses)</label>
+            <input type="number" id="periodo" value="12" min="1" step="1">
+        </div>
+
+        <div class="input-group">
+            <label>Calcular:</label>
+            <div class="radio-group">
+                <div class="radio-option selected" onclick="selectOption('valorFinal')">
+                    <input type="radio" name="calculo" id="valorFinal" value="valorFinal" checked>
+                    <label for="valorFinal">Valor Final</label>
+                </div>
+                <div class="radio-option" onclick="selectOption('valorParcela')">
+                    <input type="radio" name="calculo" id="valorParcela" value="valorParcela">
+                    <label for="valorParcela">Valor da Parcela</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group" id="parcelaContainer" style="display: none;">
+            <label for="parcelas">Número de Parcelas</label>
+            <input type="number" id="parcelas" value="12" min="1" step="1">
+        </div>
+
+        <button onclick="calcular()">Calcular</button>
+
+        <div class="resultado" id="resultado" style="display: none;">
+            <h3>Resultado do Cálculo</h3>
+            <div id="resultadoPrincipal" class="valor-principal"></div>
+
+            <div class="detalhes">
+                <div class="detalhe-item">
+                    <div class="label">Valor Principal</div>
+                    <div class="value" id="detalhePrincipal">R$ 0,00</div>
+                </div>
+                <div class="detalhe-item">
+                    <div class="label">Total de Juros</div>
+                    <div class="value" id="detalheJuros">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div class="total-juros" id="totalDetalhado"></div>
+        </div>
+    </div>
+
+    <script>function selectOption(option) {
+            // Atualizar estilo das opções
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            if (option === 'valorFinal') {
+                event.currentTarget.classList.add('selected');
+                document.getElementById('parcelaContainer').style.display = 'none';
+            } else {
+                event.currentTarget.classList.add('selected');
+                document.getElementById('parcelaContainer').style.display = 'block';
+            }
+
+            // Marcar o radio button
+            document.getElementById(option).checked = true;
+        }
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function calcularJurosCompostos(principal, taxa, periodo) {
+            const taxaDecimal = taxa / 100;
+            return principal * Math.pow(1 + taxaDecimal, periodo);
+        }
+
+        function calcularParcela(principal, taxa, parcelas) {
+            const taxaDecimal = taxa / 100;
+
+            // Fórmula da parcela: P = (PV * i * (1+i)^n) / ((1+i)^n - 1)
+            const fator = Math.pow(1 + taxaDecimal, parcelas);
+            const parcela = principal * taxaDecimal * fator / (fator - 1);
+
+            return parcela;
+        }
+
+        function calcular() {
+            // Obter valores dos inputs
+            const principal = parseFloat(document.getElementById('principal').value) || 0;
+            const taxa = parseFloat(document.getElementById('taxa').value) || 0;
+            const periodo = parseInt(document.getElementById('periodo').value) || 1;
+
+            // Verificar qual opção está selecionada
+            const tipoCalculo = document.querySelector('input[name="calculo"]:checked').value;
+
+            let valorFinal, mensagem, detalheJuros;
+
+            if (tipoCalculo === 'valorFinal') {
+                // Calcular valor final com juros compostos
+                valorFinal = calcularJurosCompostos(principal, taxa, periodo);
+                const jurosTotal = valorFinal - principal;
+
+                mensagem = formatarMoeda(valorFinal);
+                detalheJuros = formatarMoeda(jurosTotal);
+
+                document.getElementById('resultadoPrincipal').innerHTML = mensagem;
+                document.getElementById('detalhePrincipal').innerHTML = formatarMoeda(principal);
+                document.getElementById('detalheJuros').innerHTML = detalheJuros;
+                document.getElementById('totalDetalhado').innerHTML =
+                    `Em ${periodo} meses, seu investimento renderá ${detalheJuros} em juros.`;
+
+            } else {
+                // Calcular valor da parcela
+                const parcelas = parseInt(document.getElementById('parcelas').value) || 1;
+                const valorParcela = calcularParcela(principal, taxa, parcelas);
+                const valorTotal = valorParcela * parcelas;
+                const jurosTotal = valorTotal - principal;
+
+                mensagem = formatarMoeda(valorParcela) + ' por mês';
+
+                document.getElementById('resultadoPrincipal').innerHTML = mensagem;
+                document.getElementById('detalhePrincipal').innerHTML = formatarMoeda(principal);
+                document.getElementById('detalheJuros').innerHTML = formatarMoeda(jurosTotal);
+                document.getElementById('totalDetalhado').innerHTML =
+                    `${parcelas} parcelas de ${formatarMoeda(valorParcela)} = ${formatarMoeda(valorTotal)} ` +
+                    `(Total de juros: ${formatarMoeda(jurosTotal)})`;
+            }
+
+            // Mostrar resultado
+            document.getElementById('resultado').style.display = 'block';
+        }
+
+        // Calcular automaticamente ao carregar a página
+        window.onload = function() {
+            calcular();
+        };</script>
+</body>
+</html>
